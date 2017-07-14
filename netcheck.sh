@@ -17,9 +17,9 @@ do
 
       res=`dig $addr A +timeout=$DNS_TIMEOUT @$server`
       if [ $? -eq 0 ];then
-        echo netcheck_dns\{addr=\"$addr\",status=\"result\"\} 1
+        echo netcheck_dns\{addr=\"$addr\",status=\"result\"\,nameserver=\"$server\"} 1
       else
-        echo netcheck_dns\{addr=\"$addr\",status=\"result\"\} 0
+        echo netcheck_dns\{addr=\"$addr\",status=\"result\"\,nameserver=\"$server\"} 0
       fi
 
       shift 2
