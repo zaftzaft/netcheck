@@ -33,7 +33,7 @@ do
         rtt=`echo $res | grep "time=[0-9]*.[0-9]*" -o | sed -e "s/time=//"`
         rtt=`echo $rtt | sed -e "s/^.* //"`
         echo netcheck_ping\{addr=\"$addr\",status=\"result\"\} 1
-        echo netcheck_ping\{addr=\"$addr\",status=\"rtt\"\} $rtt 
+        echo netcheck_ping\{addr=\"$addr\",status=\"rtt\"\} $rtt
       else
         echo netcheck_ping\{addr=\"$addr\",status=\"result\"\} 0
       fi
@@ -43,7 +43,17 @@ do
 
     --dhcp)
       addr=$2
-      dhcping -t $DHCP_TIMEOUT -s $addr -q
+      res=`dhcping -t $DHCP_TIMEOUT -s $addr -q`
+      code=$?
+
+      if [ $code -eq 0 ]; then
+        echo netcheck_dhcp\{addr=\"$addr\",status=\"result\"\} 1
+        echo netcheck_dhcp\{addr=\"$addr\",status=\"exit_code\"\} $code
+      else
+        echo netcheck_dhcp\{addr=\"$addr\",status=\"result\"\} 0
+        echo netcheck_dhcp\{addr=\"$addr\",status=\"exit_code\"\} $code
+      fi
+
       shift 2
     ;;
 
