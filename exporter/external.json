@@ -1,0 +1,11 @@
+{
+  "ping": [
+    "8.8.8.8"
+  ],
+  "dns": [
+    "google.com@8.8.8.8"
+  ],
+  "http": [
+    "google.com"
+  ]
+}
