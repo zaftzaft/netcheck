@@ -1,13 +1,40 @@
 'use strict';
 
-const child_process = require("child_process");
-const fs = require("fs");
-const express = require("express");
-const exec = child_process.exec;
+const child_process  = require("child_process");
+const fs             = require("fs");
+const path           = require("path");
+const express        = require("express");
+const ArgumentParser = require("argparse").ArgumentParser;
+const exec           = child_process.exec;
+
+const parser = new ArgumentParser({
+  version: "0.1.0",
+  addHelp: true,
+  description: "netcheck_exporter"
+});
+
+
+parser.addArgument(["-n", "--netcheck-path"], {
+  required: true
+});
+
+parser.addArgument(["-d", "--config-dir"], {
+  required: true
+});
+
+parser.addArgument(["-p", "--port"], {
+  help: "port number. default 9059"
+});
+
+
+const args = parser.parseArgs();
 
 const app = express();
 
-const PORT = process.env.NETCHECK_PORT || 9059;
+
+const PORT = args.port || process.env.NETCHECK_PORT || 9059;
+const NETCHECK = args.netcheck_path;
+const DEFAULT_CONFIG = "default.json";
 
 
 app.get("/", (req, res) => {
@@ -16,13 +43,20 @@ app.get("/", (req, res) => {
     <h1>Netcheck Exporter</h1>
     <p><a href="/metric">Metrics</a></p>
     </body>
-    </html>`);
+    </html>
+  `);
 });
 
 app.get("/metric", (req, res) => {
-  fs.readFile("./external.json", (err, data) => {
+
+  const configName = (req.query.config || DEFAULT_CONFIG).split("/").pop().split(".")[0];
+  const filename = path.join(args.config_dir, `${configName}.json`);
+
+  console.log(filename);
+
+  fs.readFile(filename, (err, data) => {
     if(err) {
-      res.status(500).end();
+      return res.status(500).end();
     }
     const config = JSON.parse("" + data);
     let options = [];
@@ -38,10 +72,9 @@ app.get("/metric", (req, res) => {
     builder("dhcp", "--dhcp");
     builder("http", "--http");
 
-    //console.log(`sh ../netcheck.sh ${options.join(" ")}`);
-    exec(`sh ../netcheck.sh ${options.join(" ")}`, (err, stdout, stderr) => {
+    exec(`sh ${NETCHECK} ${options.join(" ")}`, (err, stdout, stderr) => {
       if(err) {
-        res.status(500).end();
+        return res.status(500).end();
       }
       res.end(stdout);
     });
@@ -51,5 +84,6 @@ app.get("/metric", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`listen :${PORT}`);
+  console.log(`netchcekPath: ${NETCHECK}`);
 });
 
