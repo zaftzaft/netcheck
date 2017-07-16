@@ -1,0 +1,9 @@
+[Unit]
+Description=Netcheck Exporter
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/netcheck_exporter -n /opt/netcheck.sh -d /etc/prometheus/netcheck/
+
+[Install]
+WantedBy=default.target
