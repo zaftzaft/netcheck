@@ -1,5 +1,8 @@
 # dhcping: yaourt -S dhcping
 # netcheck --dns google.com@8.8.8.8 --ping 8.8.8.8 --dhcp 192.168.0.1
+#          --arping 192.168.1.1 --arping 172.16.0.100/eth1
+
+VERSION=0.11
 
 PING_TIMEOUT=3
 PING_RETRY=1
@@ -7,6 +10,8 @@ HTTP_TIMEOUT=5
 DHCP_TIMEOUT=3
 DNS_TIMEOUT=3
 ARPING_TIMEOUT=0.5
+
+#echo netcheck_version $VERSION
 
 for OPT in "$@"
 do
