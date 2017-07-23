@@ -72,6 +72,7 @@ app.get("/metric", (req, res) => {
     builder("dns", "--dns");
     builder("dhcp", "--dhcp");
     builder("http", "--http");
+    builder("arping", "--arping");
 
     exec(`sh ${NETCHECK} ${options.join(" ")}`, (err, stdout, stderr) => {
       if(err) {

@@ -6,6 +6,7 @@ PING_RETRY=1
 HTTP_TIMEOUT=5
 DHCP_TIMEOUT=3
 DNS_TIMEOUT=3
+ARPING_TIMEOUT=0.5
 
 for OPT in "$@"
 do
@@ -70,6 +71,32 @@ do
       fi
       shift 2
     ;;
+
+
+    --arping)
+      opt=""
+      if [ `echo $2 | grep "/"` ]; then
+        addr=`echo $2 | cut -f 1 -d "/"`
+        dev=`echo $2 | cut -f 2 -d "/"`
+        opt="-I $dev"
+      else
+        addr=$2
+      fi
+
+      res=`arping $addr -f -c 1 -w $ARPING_TIMEOUT $opt`
+      code=$?
+
+      if [ $code -eq 0 ]; then
+        mac=`echo $res | grep -o "\[.*\]" | sed -e "s/\[//" -e "s/\]//"`
+        echo netcheck_arping\{addr=\"$addr\",status=\"result\"\} 1
+        echo netcheck_arping\{addr=\"$addr\",status=\"mac\"\,mac=\"$mac\"} 1
+      else
+        echo netcheck_arping\{addr=\"$addr\",status=\"result\"\} 0
+      fi
+
+      shift 2
+    ;;
+
 
   esac
 done
