@@ -1,3 +1,9 @@
+which node
+if [ ! $? -eq 0 ]; then
+  echo "[E] nodejs is not installed"
+  exit 1
+fi
+
 which npm
 if [ ! $? -eq 0 ]; then
   echo "[E] npm is not installed"
