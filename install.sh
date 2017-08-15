@@ -1,3 +1,11 @@
+which npm
+if [ ! $? -eq 0 ]; then
+  echo "[E] npm is not installed"
+  exit 1
+fi
+
+
+
 cp netcheck.sh /opt/netcheck.sh
 cd exporter
 npm install -g
@@ -9,7 +17,13 @@ if [ ! -d /etc/prometheus/netcheck/ ]; then
   cp ./config/external.json /etc/prometheus/netcheck/external.json
 fi
 
-cp ./systemd/netcheck_exporter.service /usr/lib/systemd/system/netcheck_exporter.service
+
+if [ -d /usr/lib/systemd/system/ ]; then
+  cp ./systemd/netcheck_exporter.service /usr/lib/systemd/system/netcheck_exporter.service
+else
+  cp ./systemd/netcheck_exporter.service /etc/systemd/system/netcheck_exporter.service
+fi
+
 
 systemctl is-enabled netcheck_exporter
 if [ $? -eq 0 ]; then
@@ -20,4 +34,5 @@ fi
 systemctl daemon-reload
 systemctl enable netcheck_exporter
 systemctl start netcheck_exporter
+
 
