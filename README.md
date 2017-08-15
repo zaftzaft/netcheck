@@ -4,6 +4,15 @@ netcheck
 Network check script for Prometheus
 
 
+## Depends
+- Node.js
+- npm
+- dig
+- ping
+- curl
+- arping
+
+
 ## Installation
 ```console
 $ git clone https://github.com/zaftzaft/netcheck.git
