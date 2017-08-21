@@ -51,4 +51,4 @@ netcheck_http{addr="google.com",status="exit_code"} 0
 - [ ] ssh
 - [ ] telnet
 - [ ] choice of curl or wget
-- [ ] background job(parallel)
+- [x] background job(parallel)
