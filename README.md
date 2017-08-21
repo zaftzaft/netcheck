@@ -47,7 +47,7 @@ netcheck_http{addr="google.com",status="exit_code"} 0
 - [ ] http status code
 - [ ] https
 - [ ] netcat
-- [x] arping (root permission or $ chmod u+s `which arping`)
+- [x] arping (root permission or `$ chmod u+s $(which arping)`, `setcap`)
 - [ ] ssh
 - [ ] telnet
 - [ ] choice of curl or wget
