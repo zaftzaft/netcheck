@@ -24,16 +24,17 @@ if [ ! -d /etc/prometheus/netcheck/ ]; then
 fi
 
 
-if [ -d /usr/lib/systemd/system/ ]; then
-  cp ./systemd/netcheck_exporter.service /usr/lib/systemd/system/netcheck_exporter.service
-else
-  cp ./systemd/netcheck_exporter.service /etc/systemd/system/netcheck_exporter.service
-fi
 
 
 systemctl is-enabled netcheck_exporter
 if [ $? -eq 0 ]; then
   systemctl stop netcheck_exporter
+fi
+
+if [ -d /usr/lib/systemd/system/ ]; then
+  cp ./systemd/netcheck_exporter.service /usr/lib/systemd/system/netcheck_exporter.service
+else
+  cp ./systemd/netcheck_exporter.service /etc/systemd/system/netcheck_exporter.service
 fi
 
 
