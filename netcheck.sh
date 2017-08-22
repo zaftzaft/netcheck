@@ -2,7 +2,7 @@
 # netcheck --dns google.com@8.8.8.8 --ping 8.8.8.8 --dhcp 192.168.0.1
 #          --arping 192.168.1.1 --arping 172.16.0.100/eth1
 
-VERSION=0.12
+VERSION=0.13
 
 PING_TIMEOUT=3
 PING_RETRY=1
