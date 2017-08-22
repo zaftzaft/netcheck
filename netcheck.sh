@@ -70,11 +70,12 @@ do
     --http)
       {
         addr=$2
-        res=`curl --silent $addr --connect-timeout $HTTP_TIMEOUT`
+        res=`curl --silent -w '%{http_code}\n' -o /dev/null $addr --connect-timeout $HTTP_TIMEOUT`
         code=$?
         if [ $code -eq 0 ]; then
           echo netcheck_http\{addr=\"$addr\",status=\"result\"\} 1
           echo netcheck_http\{addr=\"$addr\",status=\"exit_code\"\} $code
+          echo netcheck_http\{addr=\"$addr\",status=\"status_code\"\} $res
         else
           echo netcheck_http\{addr=\"$addr\",status=\"result\"\} 0
           echo netcheck_http\{addr=\"$addr\",status=\"exit_code\"\} $code
