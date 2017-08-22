@@ -42,14 +42,14 @@ app.get("/", (req, res) => {
   res.end(`<head><title>Netcheck Exporter</title></head>
     <body>
     <h1>Netcheck Exporter</h1>
-    <p><a href="/metric">Metrics</a></p>
+    <p><a href="/metrics">Metrics</a></p>
     </body>
     </html>
   `);
 });
 
-app.get("/metric", (req, res) => {
 
+const metrics = (req, res) => {
   const configName = (req.query.config || DEFAULT_CONFIG).split("/").pop().split(".")[0];
   const filename = path.join(args.config_dir, `${configName}.json`);
 
@@ -57,6 +57,7 @@ app.get("/metric", (req, res) => {
 
   fs.readFile(filename, (err, data) => {
     if(err) {
+      console.error(err);
       return res.status(500).end();
     }
     const config = JSON.parse("" + data);
@@ -76,13 +77,17 @@ app.get("/metric", (req, res) => {
 
     exec(`sh ${NETCHECK} ${options.join(" ")}`, (err, stdout, stderr) => {
       if(err) {
+        console.error(err);
         return res.status(500).end();
       }
       res.end(stdout);
     });
 
   });
-});
+};
+
+app.get("/metric", metrics);
+app.get("/metrics", metrics);
 
 app.listen(PORT, () => {
   console.log(`listen :${PORT}`);
