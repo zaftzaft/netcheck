@@ -33,7 +33,7 @@ netcheck_http{addr="google.com",status="status_code"} 302
   - job_name: 'netcheck'
     scrape_interval: 60s
     scrape_timeout: 30s
-    metrics_path: /metric
+    metrics_path: /metrics
     relabel_configs:
       - source_labels: [config]
         target_label: __param_config
