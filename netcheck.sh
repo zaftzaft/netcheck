@@ -45,6 +45,7 @@ do
           echo netcheck_ping\{addr=\"$addr\",status=\"rtt\"\} $rtt
         else
           echo netcheck_ping\{addr=\"$addr\",status=\"result\"\} 0
+          echo netcheck_ping\{addr=\"$addr\",status=\"rtt\"\} -1
         fi
       } &
 
