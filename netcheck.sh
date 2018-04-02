@@ -2,7 +2,7 @@
 # netcheck --dns google.com@8.8.8.8 --ping 8.8.8.8 --dhcp 192.168.0.1
 #          --arping 192.168.1.1 --arping 172.16.0.100/eth1
 
-VERSION=0.14
+VERSION=0.15
 
 PING_TIMEOUT=3
 PING_RETRY=1
@@ -25,6 +25,8 @@ do
         res=`dig $addr A +timeout=$DNS_TIMEOUT @$server`
         if [ $? -eq 0 ];then
           echo netcheck_dns\{addr=\"$addr\",status=\"result\"\,nameserver=\"$server\"} 1
+          qtime=`echo $res | grep "Query time: [0-9]*" -o | sed -e "s/Query time: //"`
+          echo netcheck_dns\{addr=\"$addr\",status=\"time\"\,nameserver=\"$server\"} $qtime
         else
           echo netcheck_dns\{addr=\"$addr\",status=\"result\"\,nameserver=\"$server\"} 0
         fi
@@ -82,7 +84,7 @@ do
           echo netcheck_http\{addr=\"$addr\",status=\"exit_code\"\} $code
         fi
       } &
-      
+
       shift 2
     ;;
 
